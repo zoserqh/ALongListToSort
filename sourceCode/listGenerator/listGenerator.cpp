@@ -1,3 +1,6 @@
+// g++ listGenerator.cpp -o ../../bin/listGenerator
+// 75 seg
+
 #include <random>
 #include<iostream>
 #include<fstream>
