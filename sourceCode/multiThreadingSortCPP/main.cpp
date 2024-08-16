@@ -136,27 +136,14 @@ void fillBuckets(std::vector<double>& v,std::vector<std::vector<double>>& bucket
 void mtSorting(std::vector<std::vector<double>>& buckets){
     auto start = std::chrono::high_resolution_clock::now();
 
-    std::thread t0(sortingBuckts,&buckets[0]);
-    std::thread t1(sortingBuckts,&buckets[1]);
-    std::thread t2(sortingBuckts,&buckets[2]);
-    std::thread t3(sortingBuckts,&buckets[3]);
-    std::thread t4(sortingBuckts,&buckets[4]);
-    std::thread t5(sortingBuckts,&buckets[5]);
-    std::thread t6(sortingBuckts,&buckets[6]);
-    std::thread t7(sortingBuckts,&buckets[7]);
-    std::thread t8(sortingBuckts,&buckets[8]);
-    std::thread t9(sortingBuckts,&buckets[9]);
+    std::thread myThreads[10];
+    for(int i=0;i<10;i++){
+        myThreads[i] = std::thread(sortingBuckts,&buckets[i]);
+    }
 
-    t0.join();
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-    t5.join();
-    t6.join();
-    t7.join();
-    t8.join();
-    t9.join();
+    for(int i=0;i<10;i++){
+        myThreads[i].join();
+    }
 
     auto end = std::chrono::high_resolution_clock::now();
     double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
@@ -165,7 +152,7 @@ void mtSorting(std::vector<std::vector<double>>& buckets){
 void sortingBuckts(std::vector<double>* b){
 
     std::sort (b->begin(), b->end());
-    std::cout<< "id: "<<std::this_thread::get_id()<<"\n";
+    //std::cout<< "id: "<<std::this_thread::get_id()<<"\n";
 }
 
 void grouping(std::vector<double>& v,std::vector<std::vector<double>>& buckets){
