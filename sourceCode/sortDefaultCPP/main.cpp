@@ -16,6 +16,8 @@
 void readList(std::vector<double>& v);
 void sortList(std::vector<double>& v);
 void mtRead(char* ptrb,double* ptra,int lengthLine,int arrSize, int nroThreads);
+void printTimeTaken(std::chrono::_V2::high_resolution_clock::time_point start,
+                    std::chrono::_V2::high_resolution_clock::time_point end,std::string text);
 int main(){
 
     std::vector<double> v;
@@ -68,12 +70,10 @@ void readList(std::vector<double>& v){
     else {  std::cout << "Unable to open file"; }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
-    std::cout << "reading file: "<< time_taken << "sec\n";
+    printTimeTaken(start,end,"reading file: ");
 }
 
 void sortList(std::vector<double>& v){
-    std::cout<<"sorting vector\n";
     auto start = std::chrono::high_resolution_clock::now();  
     // unsync the I/O of C and C++.
     // std::ios_base::sync_with_stdio(false);
@@ -81,8 +81,7 @@ void sortList(std::vector<double>& v){
     std::sort (v.begin(), v.end()); 
 
     auto end = std::chrono::high_resolution_clock::now();
-    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
-    std::cout << time_taken << "sec\n";
+    printTimeTaken(start,end,"sorting vector: ");
 }
 
 void mtRead(char* ptrb, double* ptra, int lengthLine, int arrSize, int nroThreads){
@@ -95,4 +94,11 @@ void mtRead(char* ptrb, double* ptra, int lengthLine, int arrSize, int nroThread
         ptra += 1;
     }
     // std::cout<< "id: "<<std::this_thread::get_id()<< " "<< *(ptrb+2) <<"\n";
+}
+
+void printTimeTaken(std::chrono::_V2::high_resolution_clock::time_point start,
+                    std::chrono::_V2::high_resolution_clock::time_point end,std::string text){
+    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
+    std::cout << text << time_taken << " sec\n";
+
 }

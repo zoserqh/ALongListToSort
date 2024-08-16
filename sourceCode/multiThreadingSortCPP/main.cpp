@@ -24,6 +24,8 @@ void mtSorting(std::vector<std::vector<double>>& buckets);
 void sortingBuckts(std::vector<double>* b);
 void grouping(std::vector<double>& v,std::vector<std::vector<double>>& buckets);
 void mtRead(char* ptrb,double* ptra,int lengthLine,int arrSize, int nroThreads);
+void printTimeTaken(std::chrono::_V2::high_resolution_clock::time_point start,
+                    std::chrono::_V2::high_resolution_clock::time_point end,std::string text);
 
 int main(){
 
@@ -46,7 +48,7 @@ int main(){
 }
 
 void readList(std::vector<double>& v){
-    auto start = std::chrono::high_resolution_clock::now();
+    auto t1 = std::chrono::high_resolution_clock::now();
     
     std::string pathFile = "../data/list.txt";
     std::ifstream myFile (pathFile);
@@ -81,9 +83,8 @@ void readList(std::vector<double>& v){
     }
     else {  std::cout << "Unable to open file"; }
 
-    auto end = std::chrono::high_resolution_clock::now();
-    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
-    std::cout << "reading file: "<< time_taken << "sec\n";
+    auto t2 = std::chrono::high_resolution_clock::now();
+    printTimeTaken(t1,t2,"reading file: ");
 }
 
 void sortList(std::vector<double>& v){
@@ -95,8 +96,7 @@ void sortList(std::vector<double>& v){
     grouping(v,buckets);
     
     auto end = std::chrono::high_resolution_clock::now();
-    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
-    std::cout << "total time taken sorting: " << time_taken << "sec\n";
+    printTimeTaken(start,end,"total time taken sorting: ");
 
     // std::cout << std::fixed << std::setprecision(20);
     // for(int i=0;i<v.size();i++){
@@ -125,8 +125,7 @@ void fillBuckets(std::vector<double>& v,std::vector<std::vector<double>>& bucket
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
-    std::cout << "filling buckets: " << time_taken << "sec\n";
+    printTimeTaken(start,end,"filling buckets: ");
 
     // for(int i=0;i<buckets.size();i++){
     //     std::cout << buckets[i].size()<<" ";
@@ -146,8 +145,7 @@ void mtSorting(std::vector<std::vector<double>>& buckets){
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
-    std::cout << "sorting buckets with multi-threading: " << time_taken << "sec\n";
+    printTimeTaken(start,end,"sorting buckets with multi-threading: ");
 }
 void sortingBuckts(std::vector<double>* b){
 
@@ -167,8 +165,7 @@ void grouping(std::vector<double>& v,std::vector<std::vector<double>>& buckets){
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
-    std::cout << "grouping buckets: " << time_taken << "sec\n";
+    printTimeTaken(start,end,"grouping buckets: ");
 }
 
 void mtRead(char* ptrb, double* ptra, int lengthLine, int arrSize, int nroThreads){
@@ -181,4 +178,11 @@ void mtRead(char* ptrb, double* ptra, int lengthLine, int arrSize, int nroThread
         ptra += 1;
     }
     // std::cout<< "id: "<<std::this_thread::get_id()<< " "<< *(ptrb+2) <<"\n";
+}
+
+void printTimeTaken(std::chrono::_V2::high_resolution_clock::time_point start,
+                    std::chrono::_V2::high_resolution_clock::time_point end,std::string text){
+    double time_taken = ( std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() ) * 1e-9;
+    std::cout << text << time_taken << " sec\n";
+
 }
